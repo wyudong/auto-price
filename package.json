@@ -1,9 +1,14 @@
 {
+  "name": "auto-price",
+  "type": "module",
   "scripts": {
+    "lowest": "node scripts/getLowestPrice.js",
     "lint": "npx eslint *.js"
   },
   "dependencies": {
-    "node-screenshots": "^0.2.0",
+    "clipboardy": "^4.0.0",
+    "jimp": "^0.22.12",
+    "robotjs": "^0.6.0",
     "tesseract.js": "^5.1.0"
   },
   "devDependencies": {
@@ -11,5 +16,8 @@
     "@stylistic/eslint-plugin-js": "^2.1.0",
     "eslint": "9.x",
     "globals": "^15.4.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
