@@ -36,12 +36,11 @@ for (let i = 0; i < watchedItems.length; i++) {
   for (let i = 0; i < 9; i++) {
     robot.keyTap('backspace');
   }
-  await sleep(5000);
 
   // search
   clipboard.writeSync(watchedItem);
   robot.keyTap('v', 'control');
-  await sleep(500);
+  await sleep(5000);
   robot.keyTap('enter');
   await sleep(500);
   robot.keyTap('enter');
