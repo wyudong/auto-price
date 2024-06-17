@@ -1,7 +1,13 @@
 import clipboard from 'clipboardy';
-import { createWorker } from 'tesseract.js';
 import robot from 'robotjs';
-
+import { createWorker } from 'tesseract.js';
+import { send } from '../notification.js';
+import {
+  sleep,
+  getList,
+  writeBmp,
+  readable,
+} from '../utils.js';
 import {
   POS_INPUT_Y,
   POS_INPUT_END,
@@ -11,26 +17,17 @@ import {
   FIRST_ITEM_HEIGHT,
 } from '../constants.js';
 
-import { send } from '../notification.js';
-import {
-  sleep,
-  getList,
-  writeBmp,
-  readable,
-} from '../utils.js';
-
-const watchedItems = getList('WATCHED_ITEMS');
-const watchedPrice_ = getList('WATCHED_PRICE');
-console.log(watchedItems);
-
+const watchingItems = getList('WATCHED_ITEMS');
+const watchingPrice_ = getList('WATCHED_PRICE');
+console.log(watchingItems);
 console.log('script will start in 3 sec');
 await sleep(3000);
 
-for (let i = 0; i < watchedItems.length; i++) {
-  const watchedItem = watchedItems[i];
-  const watchedPrice = watchedPrice_[i];
-  const logPrice = readable(watchedPrice);
-  console.log(`${watchedItem} ${logPrice}`);
+for (let i = 0; i < watchingItems.length; i++) {
+  const watchingItem = watchingItems[i];
+  const watchingPrice = watchingPrice_[i];
+  const logPrice = readable(watchingPrice);
+  console.log(`${watchingItem} ${logPrice}`);
 
   // clear input field
   robot.moveMouse(POS_INPUT_END, POS_INPUT_Y);
@@ -40,7 +37,7 @@ for (let i = 0; i < watchedItems.length; i++) {
   }
 
   // search
-  clipboard.writeSync(watchedItem);
+  clipboard.writeSync(watchingItem);
   robot.keyTap('v', 'control');
   await sleep(5000);
   robot.keyTap('enter');
@@ -49,7 +46,7 @@ for (let i = 0; i < watchedItems.length; i++) {
   await sleep(1500);
 
   // take screenshot of search results
-  const filename = `.screenshots/${watchedItem}.png`;
+  const filename = `.screenshots/${watchingItem}.png`;
   let capture = robot.screen.capture(POS_FIRST_ITEM_X, POS_FIRST_ITEM_Y, FIRST_ITEM_WIDTH, FIRST_ITEM_HEIGHT);
   await writeBmp({ data: capture.image, width: capture.width, height: capture.height }, filename);
 
@@ -77,8 +74,8 @@ for (let i = 0; i < watchedItems.length; i++) {
   // send notification
   const currentPrice = readable(lines[0]);
   console.log(currentPrice);
-  if (currentPrice <= watchedPrice) {
-    const res = await send(watchedItem, `目前价格：${currentPrice}`);
+  if (currentPrice < watchingPrice) {
+    const res = await send(watchingItem, `目前价格：${currentPrice}`);
     console.log(res);
   }
 }
