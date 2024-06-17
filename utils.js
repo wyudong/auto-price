@@ -1,7 +1,15 @@
 import Jimp from 'jimp'
+import _ from 'dotenv';
+import fs from 'fs';
+
 
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function getList(key) {
+  const data = _.parse(fs.readFileSync('.env'));
+  return data[key].split(',').map(item => item.trim());
 }
 
 export function writeBmp(buffer, path) {
