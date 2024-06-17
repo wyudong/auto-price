@@ -2,7 +2,7 @@
   "name": "auto-price",
   "type": "module",
   "scripts": {
-    "lowest": "node scripts/getLowestPrice.js",
+    "start": "bash main.sh",
     "lint": "npx eslint *.js"
   },
   "dependencies": {
