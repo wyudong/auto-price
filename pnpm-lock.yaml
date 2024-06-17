@@ -11,6 +11,9 @@ importers:
       clipboardy:
         specifier: ^4.0.0
         version: 4.0.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       jimp:
         specifier: ^0.22.12
         version: 0.22.12
@@ -397,6 +400,10 @@ packages:
 
   dom-walk@0.1.2:
     resolution: {integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==}
+
+  dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
 
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
@@ -1424,6 +1431,8 @@ snapshots:
   detect-libc@1.0.3: {}
 
   dom-walk@0.1.2: {}
+
+  dotenv@16.4.5: {}
 
   end-of-stream@1.4.4:
     dependencies:
