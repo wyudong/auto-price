@@ -1,34 +1,41 @@
-import Jimp from 'jimp'
-import _ from 'dotenv';
-import fs from 'fs';
-
+import Jimp from 'jimp';
+import robot from 'robotjs';
 
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function getList(key) {
-  const data = _.parse(fs.readFileSync('.env'));
-  return data[key].split(',').map(item => item.trim());
+export async function writeScreenshot(file, dimension) {
+  const { x, y, width, height } = dimension;
+  const capture = robot.screen.capture(x, y, width, height);
+  await writeBmp({ data: capture.image, width: capture.width, height: capture.height }, file);
 }
 
-export function writeBmp(buffer, path) {
+function writeBmp(buffer, path) {
   return new Promise((resolve, reject) => {
     new Jimp(buffer, (err, image) => {
       if (err) {
         reject(err);
       }
-      image.write(path);
-      resolve();
+      image.scale(1, Jimp.RESIZE_NEAREST_NEIGHBOR).contrast(1).write(path, () => {
+        resolve();
+      });
     });
   });
 }
 
 export function readable(number) {
-  const e = Math.floor(number / 100000000);
-  const w = Math.floor((number - e * 100000000) / 10000);;
+  const NUMBER_E = 100000000;
+  const NUMBER_W = 10000;
+  const e = Math.floor(number / NUMBER_E);
+  const w = Math.floor((number - e * NUMBER_E) / NUMBER_W);
+  const r = Math.floor(number - e * NUMBER_E - w * NUMBER_W);
+  const wStr = w.toString().padStart(4, '0');
+  const rStr = r.toString().padStart(4, '0');
   if (e > 0) {
-    return `${e}亿${w}万`;
+    return `${e}亿${wStr}万${rStr}`;
+  } else if (w > 0) {
+    return `${w}万${rStr}`;
   }
-  return `${w}万`;
+  return rStr;
 }

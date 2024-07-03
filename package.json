@@ -2,8 +2,8 @@
   "name": "auto-price",
   "type": "module",
   "scripts": {
-    "start": "bash main.sh",
-    "lint": "npx eslint *.js"
+    "start": "node actions/purchase.js",
+    "lint": "npx eslint"
   },
   "dependencies": {
     "clipboardy": "^4.0.0",
