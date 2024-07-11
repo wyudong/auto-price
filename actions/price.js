@@ -30,52 +30,33 @@ export default async function compare(targets, options) {
     console.log(watchingItem);
     console.log(`预期 ${logPrice}`);
 
-    // clear input field
-    robot.moveMouse(POS_INPUT_END, POS_INPUT_Y);
-    robot.mouseClick();
-    for (let i = 0; i < 9; i++) {
-      robot.keyTap('backspace');
-    }
+    await clearInput();
 
-    // search
-    clipboard.writeSync(watchingItem);
-    robot.keyTap('v', 'control');
-    await sleep(1000);
-    robot.keyTap('enter');
-    await sleep(500);
-    robot.keyTap('enter');
-    await sleep(1000);
-    robot.keyTap('enter');
+    await search(watchingItem);
 
-    // take screenshot of search results and ocr
-    const fileWatchingItem = `.screenshots/${watchingItem}.png`;
-    await writeScreenshot(fileWatchingItem, {
+    // take screenshot of search results
+    const imagePath = `.screenshots/${watchingItem}.png`;
+    await writeScreenshot(imagePath, {
       x: offset ? POS_FIRST_ITEM_X - FIRST_ITEM_WIDTH : POS_FIRST_ITEM_X,
       y: POS_FIRST_ITEM_Y,
       width: FIRST_ITEM_WIDTH,
       height: FIRST_ITEM_HEIGHT,
     });
-    const currentPrice = await recognize(fileWatchingItem);
+
+    // ocr
+    const currentPrice = await recognize(imagePath);
     if (!currentPrice) {
       console.log('stocks may be null');
-      await sleep(1000);
+      await sleep(500);
       continue;
     }
+
     const readablePrice = readable(currentPrice);
     console.log(`目前 ${readablePrice}`);
 
-    // purchase
+    // purchase or send notification
     if (currentPrice <= watchingPrice && toPurchase) {
-      robot.moveMouse(POS_FIRST_ITEM_X, POS_FIRST_ITEM_Y);
-      robot.mouseClick();
-      await sleep(500);
-      robot.moveMouse(BUTTON_PRUCHASE_X, BUTTON_PRUCHASE_Y);
-      robot.mouseClick();
-      await sleep(1000);
-      robot.moveMouse(BUTTON_CONFIRM_X, BUTTON_CONFIRM_Y);
-      robot.mouseClick();
-      await sleep(1000);
-      robot.mouseClick();
+      await purchaseItem();
       const res = await send(watchingItem, `购入价格：${readablePrice}`);
       console.log(res);
     } else if (currentPrice <= watchingPrice) {
@@ -86,4 +67,38 @@ export default async function compare(targets, options) {
     console.log('====================');
     await sleep(5000);
   }
+}
+
+async function clearInput() {
+  robot.moveMouse(POS_INPUT_END, POS_INPUT_Y);
+  robot.mouseClick();
+  for (let i = 0; i < 9; i++) {
+    robot.keyTap('backspace');
+  }
+  await sleep(500);
+}
+
+async function search(keyword) {
+  clipboard.writeSync(keyword);
+  await sleep(1000);
+  robot.keyTap('v', 'control');
+  await sleep(500);
+  robot.keyTap('enter');
+  await sleep(500);
+  robot.keyTap('enter');
+  await sleep(1000);
+  robot.keyTap('enter');
+}
+
+async function purchaseItem() {
+  robot.moveMouse(POS_FIRST_ITEM_X, POS_FIRST_ITEM_Y);
+  robot.mouseClick();
+  await sleep(500);
+  robot.moveMouse(BUTTON_PRUCHASE_X, BUTTON_PRUCHASE_Y);
+  robot.mouseClick();
+  await sleep(1000);
+  robot.moveMouse(BUTTON_CONFIRM_X, BUTTON_CONFIRM_Y);
+  robot.mouseClick();
+  await sleep(1000);
+  robot.mouseClick();
 }
