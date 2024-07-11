@@ -93,10 +93,10 @@ async function search(keyword) {
 async function purchaseItem() {
   robot.moveMouse(POS_FIRST_ITEM_X, POS_FIRST_ITEM_Y);
   robot.mouseClick();
-  await sleep(500);
+  await sleep(2000);
   robot.moveMouse(BUTTON_PRUCHASE_X, BUTTON_PRUCHASE_Y);
   robot.mouseClick();
-  await sleep(1000);
+  await sleep(3000);
   robot.moveMouse(BUTTON_CONFIRM_X, BUTTON_CONFIRM_Y);
   robot.mouseClick();
   await sleep(1000);
