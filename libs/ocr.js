@@ -75,11 +75,12 @@ export function recognize(path) {
     Jimp.read(path).then((image) => {
       const comma = findComma(image);
       if (!comma) {
-        console.log('comma not found');
+        console.log('comma not found, target < 1000');
         resolve(null);
       }
       const results = matchNumbers(image, comma);
-      resolve(parseInt(results.reverse().join('')));
+      const number = parseInt(results.reverse().join(''));
+      resolve(number);
     }).catch((err) => {
       reject(err);
     });;
@@ -129,7 +130,7 @@ function matchNumbers(image, comma) {
   startX = baseX - NUMBER_WIDTH - NUMBER_SPACING;
   pixels = getPixels(image, startX, startY);
   const thousand = parsePixels(pixels);
-  results.push(one, ten, hundred, thousand);
+  results.push(one, ten, hundred, thousand); // at least 1,000
 
   // ten-thounsand
   startX = startX - NUMBER_WIDTH - NUMBER_SPACING;
