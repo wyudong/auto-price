@@ -9,8 +9,7 @@
     "clipboardy": "^4.0.0",
     "dotenv": "^16.4.5",
     "jimp": "^0.22.12",
-    "robotjs": "^0.6.0",
-    "tesseract.js": "^5.1.0"
+    "robotjs": "^0.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",
