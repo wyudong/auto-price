@@ -1,8 +1,8 @@
-import clipboard from 'clipboardy';
 import robot from 'robotjs';
 import { send } from '../libs/notification.js';
 import { recognize } from '../libs/ocr.js';
 import {
+  copySync,
   sleep,
   writeScreenshot,
   readable,
@@ -47,7 +47,7 @@ export default async function compare(targets, options) {
     const currentPrice = await recognize(imagePath);
     if (!currentPrice) {
       console.log('stocks may be null');
-      await sleep(500);
+      await sleep(5000);
       continue;
     }
 
@@ -64,7 +64,6 @@ export default async function compare(targets, options) {
       console.log(res);
     }
 
-    console.log('====================');
     await sleep(5000);
   }
 }
@@ -72,15 +71,15 @@ export default async function compare(targets, options) {
 async function clearInput() {
   robot.moveMouse(POS_INPUT_END, POS_INPUT_Y);
   robot.mouseClick();
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 10; i++) {
     robot.keyTap('backspace');
+    await sleep(100);
   }
-  await sleep(500);
 }
 
 async function search(keyword) {
-  clipboard.writeSync(keyword);
-  await sleep(1000);
+  copySync(keyword);
+  await sleep(500);
   robot.keyTap('v', 'control');
   await sleep(500);
   robot.keyTap('enter');

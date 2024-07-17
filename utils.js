@@ -1,3 +1,4 @@
+import { execSync } from 'child_process';
 import Jimp from 'jimp';
 import robot from 'robotjs';
 
@@ -38,4 +39,15 @@ export function readable(number) {
     return `${w}万${rStr}`;
   }
   return rStr;
+}
+
+export function setTimeBreak(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+export function copySync(content) {
+  const copyCommand = process.platform === 'win32' ? 'clip' : 'pbcopy';
+  execSync(`echo ${content}| ${copyCommand}`);
 }

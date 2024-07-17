@@ -1,6 +1,6 @@
 import compare from './price.js';
 import { targets } from './env.js';
-import { sleep } from '../utils.js';
+import { sleep, setTimeBreak } from '../utils.js';
 
 console.log('script will start in 3 sec');
 console.log(targets);
@@ -15,5 +15,7 @@ if (args.includes('--purchase')) {
 
 while(true) {
   await compare(targets, options);
-  await sleep(5000);
+  console.log(new Date().toLocaleString());
+  console.log('===================');
+  await setTimeBreak(10000);
 }
