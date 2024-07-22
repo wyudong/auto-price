@@ -2,7 +2,6 @@ import robot from 'robotjs';
 import { send } from '../libs/notification.js';
 import { recognize } from '../libs/ocr.js';
 import {
-  copySync,
   sleep,
   writeScreenshot,
   readable,
@@ -24,7 +23,7 @@ export default async function compare(targets, options) {
   const { toPurchase } = options;
 
   for (let i = 0; i < targets.length; i++) {
-    const { item: watchingItem, price, offset } = targets[i];
+    const { item: watchingItem, price, pinyin, offset } = targets[i];
     const watchingPrice = parseInt(price);
     const logPrice = readable(watchingPrice);
     console.log(watchingItem);
@@ -32,7 +31,7 @@ export default async function compare(targets, options) {
 
     await clearInput();
 
-    await search(watchingItem);
+    await search(pinyin);
 
     // take screenshot of search results
     const imagePath = `.screenshots/${watchingItem}.png`;
@@ -77,11 +76,11 @@ async function clearInput() {
   }
 }
 
-async function search(keyword) {
-  copySync(keyword);
-  await sleep(500);
-  robot.keyTap('v', 'control');
-  await sleep(500);
+async function search(pinyin) {
+  for (const char of pinyin) {
+    robot.keyTap(char);
+    await sleep(50);
+  }
   robot.keyTap('enter');
   await sleep(500);
   robot.keyTap('enter');
